@@ -11,7 +11,7 @@ import UIKit
 class ViewController: UIViewController, UITableViewDataSource,
 UITableViewDelegate{
     
-    var emojis = [String]();
+    var emojis = ["😘", "🤪", "🤩", "😱", "💩"];
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return emojis.count;
@@ -23,19 +23,15 @@ UITableViewDelegate{
         return cell
     }
     
-    func initEmojis() {
-        for i in 0x1F600...0x1F64F {
-            let c = String(describing: UnicodeScalar(i)!)
-            emojis.append(c)
-        }
-        
-        for i in  0x1F910...0x1F937 {
-            let c = String(describing: UnicodeScalar(i)!)
-            emojis.append(c)
-            
-        }
-        
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        performSegue(withIdentifier: "moveSegue", sender: emojis[indexPath.row])
+    }
     
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        let defVC = segue.destination as! DefinitionViewController
+        defVC.emoji = sender as! String
+        print(sender!)
     }
     
 
@@ -43,7 +39,6 @@ UITableViewDelegate{
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        initEmojis()
         // Do any additional setup after loading the view, typically from a nib.
         emojiTable.dataSource = self
         emojiTable.delegate = self
